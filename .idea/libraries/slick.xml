@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="slick">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../slick.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../../eeaSource" />
+    </SOURCES>
+  </library>
+</component>
