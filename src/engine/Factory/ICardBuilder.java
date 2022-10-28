@@ -1,4 +1,4 @@
 package engine.Factory;
 
-public class ICardBuilder extends Builder{
+public class ICardBuilder {
 }
