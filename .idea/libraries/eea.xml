@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="eea">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../eea.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/eea.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="file://$PROJECT_DIR$/../../eeaDocu/doc" />
+      <root url="jar://$PROJECT_DIR$/libs/eeaDocu.zip!/doc" />
     </JAVADOC>
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../eeaSource" />
+      <root url="jar://$PROJECT_DIR$/libs/eeaSource.zip!/" />
     </SOURCES>
   </library>
 </component>
