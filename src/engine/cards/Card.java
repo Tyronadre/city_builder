@@ -13,7 +13,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 // FIXME: 27.10.2022 Implementation
 
-public class Card extends Entity implements ICard {
+public abstract class Card extends Entity implements ICard {
     private final int cost;
     private final CardClass cardClass;
     private final Type type;
@@ -53,13 +53,4 @@ public class Card extends Entity implements ICard {
         addComponent(paintFront ? front : back);
     }
 
-    @Override
-    public Event getEvent(IGameBoard gameBoard, IPlayer player) {
-        return new Event() {
-            @Override
-            protected boolean performAction(GameContainer gc, StateBasedGame sb, int delta) {
-                return false;
-            }
-        };
-    }
 }

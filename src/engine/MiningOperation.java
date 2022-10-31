@@ -55,11 +55,11 @@ public class MiningOperation extends StateBasedGame {
     public void initStatesList(GameContainer gameContainer) throws SlickException {
 // Fuege dem StateBasedGame die States hinzu
 // (der zuerst hinzugefuegte State wird als erster State gestartet)
-        addState(new MainMenuState(MAINMENU_STATE));
-        addState(new GameplayState(GAMEPLAY_STATE));
+        addState(new MainMenuState(STATE_MAINMENU));
+        addState(new GameplayState(STATE_GAMEPLAY));
 
         // Fuege dem StateBasedEntityManager die States hinzu
-        StateBasedEntityManager.getInstance().addState(MAINMENU_STATE);
-        StateBasedEntityManager.getInstance().addState(GAMEPLAY_STATE);
+        StateBasedEntityManager.getInstance().addState(STATE_MAINMENU);
+        StateBasedEntityManager.getInstance().addState(STATE_GAMEPLAY);
     }
 }

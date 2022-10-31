@@ -1,5 +1,10 @@
 package engine;
 
+import eea.engine.event.Event;
+import engine.cards.Card;
+import engine.cards.CardBuilder;
+import engine.cards.CardClass;
+import engine.cards.Type;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -22,6 +27,9 @@ import eea.engine.event.basicevents.LeavingScreenEvent;
 import eea.engine.event.basicevents.LoopEvent;
 import eea.engine.event.basicevents.MouseClickedEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Timo Bähr
  *
@@ -43,6 +51,9 @@ public class GameplayState extends BasicGameState {
      */
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        //GenCards:
+        List<Card> cards = genCards();
+
 
         // Hintergrund laden
         Entity background = new Entity("background");	// Entitaet fuer Hintergrund
@@ -55,7 +66,7 @@ public class GameplayState extends BasicGameState {
         // Bei Drücken der ESC-Taste zurueck ins Hauptmenue wechseln
         Entity esc_Listener = new Entity("ESC_Listener");
         KeyPressedEvent esc_pressed = new KeyPressedEvent(Input.KEY_ESCAPE);
-        esc_pressed.addAction(new ChangeStateAction(MiningOperation.MAINMENU_STATE));
+        esc_pressed.addAction(new ChangeStateAction(MiningOperation.STATE_MAINMENU));
         esc_Listener.addComponent(esc_pressed);
         entityManager.addEntity(stateID, esc_Listener);
 
@@ -90,7 +101,7 @@ public class GameplayState extends BasicGameState {
                 // ... zerstoere den Wassertropfen
                 lse.addAction(new DestroyEntityAction());
                 // ... und wechsle ins Hauptmenue
-                lse.addAction(new ChangeStateAction(MiningOperation.MAINMENU_STATE));
+                lse.addAction(new ChangeStateAction(MiningOperation.STATE_MAINMENU));
 
                 drop.addComponent(lse);
                 entityManager.addEntity(stateID, drop);
@@ -100,6 +111,17 @@ public class GameplayState extends BasicGameState {
 
         entityManager.addEntity(stateID, mouse_Clicked_Listener);
 
+    }
+
+    private List<Card> genCards() {
+        List<Card> cards = new ArrayList<>();
+        CardBuilder cb = new CardBuilder();
+        cards.add(cb.setName("Weizenfeld").setType(Type.PRIMARY_INDUSTRY).setCardClass(CardClass.WHEAT).setCost(1).setFront(ImageHelper.load("Weizenfeld")).setBack(ImageHelper.load("Back")).setEvent(new Event() {
+            @Override
+            protected boolean performAction(GameContainer gc, StateBasedGame sb, int delta) {
+                return false;
+            }
+        }))
     }
 
     /**

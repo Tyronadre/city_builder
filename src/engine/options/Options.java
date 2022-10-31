@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Random;
 
 public class Options {
-    int soundLevel;
-    int playerCount;
-    AiLevel aiLevel;
-    List<Player> players;
+    static int soundLevel;
+    static int playerCount;
+    static AiLevel aiLevel;
+    static List<Player> players;
     enum AiLevel {EASY, MEDIUM, HARD}
     enum PlayerType {AI, PLAYER}
 
@@ -19,7 +19,7 @@ public class Options {
 
     private static final Options options = new Options();
 
-    public void init() {
+    public static void init() {
         soundLevel = 100;
         playerCount = 2;
         aiLevel = AiLevel.EASY;

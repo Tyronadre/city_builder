@@ -5,9 +5,9 @@ import java.util.Collection;
 public interface IPlayer {
     int getCoins();
 
-    int removeCoins();
+    int removeCoins(int coins);
 
-    int addCoins();
+    void addCoins(int coins);
 
     Collection<ICard> getCards();
 
