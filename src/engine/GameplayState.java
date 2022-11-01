@@ -27,6 +27,7 @@ import eea.engine.event.basicevents.LeavingScreenEvent;
 import eea.engine.event.basicevents.LoopEvent;
 import eea.engine.event.basicevents.MouseClickedEvent;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +53,8 @@ public class GameplayState extends BasicGameState {
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         //GenCards:
-        List<Card> cards = genCards();
+        List<Card> cards = CardBuilder.buildCardsFromCSV("/assets/cards.csv");
+        System.out.println(cards);
 
 
         // Hintergrund laden
@@ -111,17 +113,13 @@ public class GameplayState extends BasicGameState {
 
         entityManager.addEntity(stateID, mouse_Clicked_Listener);
 
-    }
+        int i = 0;
+        for (Card card : cards) {
+            StateBasedEntityManager.getInstance().addEntity(stateID, card);
+            card.setPosition(new Vector2f(i++ * 210, 0));
+            System.out.println(card);
+        }
 
-    private List<Card> genCards() {
-        List<Card> cards = new ArrayList<>();
-        CardBuilder cb = new CardBuilder();
-        cards.add(cb.setName("Weizenfeld").setType(Type.PRIMARY_INDUSTRY).setCardClass(CardClass.WHEAT).setCost(1).setFront(ImageHelper.load("Weizenfeld")).setBack(ImageHelper.load("Back")).setEvent(new Event() {
-            @Override
-            protected boolean performAction(GameContainer gc, StateBasedGame sb, int delta) {
-                return false;
-            }
-        }))
     }
 
     /**

@@ -45,7 +45,7 @@ public class MainMenuState extends BasicGameState {
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         // Hintergrund laden
         Entity background = new Entity("menu");	// Entitaet fuer Hintergrund
-        background.setPosition(new Vector2f(400,300));	// Startposition des Hintergrunds
+        background.setPosition(new Vector2f(100,0));	// Startposition des Hintergrunds
         background.addComponent(new ImageRenderComponent(new Image("/assets/menu.png"))); // Bildkomponente
 
         // Hintergrund-Entitaet an StateBasedEntityManager uebergeben
@@ -62,7 +62,7 @@ public class MainMenuState extends BasicGameState {
 
         // Erstelle das Ausloese-Event und die zugehoerige Action
         ANDEvent mainEvents = new ANDEvent(new MouseEnteredEvent(), new MouseClickedEvent());
-        Action new_Game_Action = new ChangeStateInitAction(MiningOperation.GAMEPLAY_STATE);
+        Action new_Game_Action = new ChangeStateInitAction(MiningOperation.STATE_GAMEPLAY);
         mainEvents.addAction(new_Game_Action);
         new_Game_Entity.addComponent(mainEvents);
 

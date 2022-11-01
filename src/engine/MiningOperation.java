@@ -7,6 +7,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.awt.*;
+import java.util.Properties;
+
 public class MiningOperation extends StateBasedGame {
     /**
      * Optionsmenü
@@ -29,11 +32,11 @@ public class MiningOperation extends StateBasedGame {
     public static void main(String[] args) throws SlickException {
         //Setze dll's
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-            System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/lwjgl-2.8.3/native/windows");
+            System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/libs/lwjgl-2.9.1/native/windows");
         } else if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-            System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/lwjgl-2.8.3/native/macosx");
+            System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/libs/lwjgl-2.9.1/native/macosx");
         } else {
-            System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/lwjgl-2.8.3/native/" + System.getProperty("os.name").toLowerCase());
+            System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/libs/lwjgl-2.9.1/native/" + System.getProperty("os.name").toLowerCase());
         }
         System.setProperty("org.lwjgl.opengl.Display.allowSoftwareOpenGL", "true");
         System.err.println(System.getProperty("os.name") + ": " + System.getProperty("org.lwjgl.librarypath"));
@@ -41,6 +44,7 @@ public class MiningOperation extends StateBasedGame {
         AppGameContainer app = new AppGameContainer(new MiningOperation());
 
         app.setShowFPS(false);
+        app.setDisplayMode(Toolkit.getDefaultToolkit().getScreenSize().width,Toolkit.getDefaultToolkit().getScreenSize().height,true);
         Options.init();
 
         app.start();

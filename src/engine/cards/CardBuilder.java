@@ -7,11 +7,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.ResourceLoader;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class CardBuilder {
     private String name;
@@ -67,44 +70,46 @@ public class CardBuilder {
     }
 
 
-    public static List<Card> buildCardsFromFile(File file {
+    public static List<Card> buildCardsFromCSV(String csv) {
         List<Card> cards = new ArrayList<>();
 
-        try (var reader = new BufferedReader(new FileReader(file))) {
+        try (var reader = new BufferedReader(new FileReader(ResourceLoader.getResource(csv).getFile()))) {
             String l;
             while((l = reader.readLine()) != null) {
-                var line = l.split(",");
-                if (line.length != 6) {
-                    System.err.println("Could not parse line, skipping: " + Arrays.toString(line));
-                    continue;
+                try {
+                    var line = l.split(",");
+                    if (line.length != 6) {
+                        System.err.println("Could not parse line, skipping: " + Arrays.toString(line));
+                        continue;
+                    }
+                    var cardBuilder = new CardBuilder();
+                    cardBuilder.setName(line[0]);
+                    cardBuilder.setType(switch (Integer.parseInt(line[1])) {
+                        case 1 -> Type.PRIMARY_INDUSTRY;
+                        case 2 -> Type.SECONDARY_INDUSTRY;
+                        case 3 -> Type.RESTAURANTS;
+                        case 4 -> Type.MAYOR_ESTABLISHMENT;
+                        case 5 -> Type.LANDMARK;
+                        default -> throw new IllegalStateException("Unexpected value: " + line[2]);
+                    });
+                    cardBuilder.setCardClass(switch (line[2]) {
+                        case "feld" -> CardClass.WHEAT;
+                        case "tier" -> CardClass.COW;
+                        case "laden" -> CardClass.SUITCASE;
+                        default -> throw new IllegalStateException("Unexpected value: " + line[2]);
+                    });
+                    cardBuilder.setCost(Integer.parseInt(line[3]));
+                    cardBuilder.setFront(new Image("/assets/cards/"+line[4]));
+                    cardBuilder.setBack(new Image("/assets/cards/"+line[5]));
+                    cardBuilder.setEvent(getEvent(line[0]));
+                    cards.add(cardBuilder.build());
+                } catch (RuntimeException | SlickException e) {
+                    System.err.println("Failed to load card: " + l);
+                    e.printStackTrace();
                 }
-                var cardBuilder = new CardBuilder();
-                cardBuilder.setName(line[0]);
-                cardBuilder.setType(switch (Integer.getInteger(line[1])) {
-                    case 1 -> Type.PRIMARY_INDUSTRY;
-                    case 2 -> Type.SECONDARY_INDUSTRY;
-                    case 3 -> Type.RESTAURANTS;
-                    case 4 -> Type.MAYOR_ESTABLISHMENT;
-                    case 5 -> Type.LANDMARK;
-                    default -> throw new IllegalStateException("Unexpected value: " + line[2]);
-                });
-                cardBuilder.setCardClass(switch (line[2]) {
-                    case "feld" -> CardClass.WHEAT;
-                    case "tier" -> CardClass.COW;
-                    case "laden" -> CardClass.SUITCASE;
-
-                    default -> throw new IllegalStateException("Unexpected value: " + line[2]);
-                });
-                cardBuilder.setCost(Integer.getInteger(line[3]));
-                cardBuilder.setFront(new Image(line[4]));
-                cardBuilder.setBack(new Image(line[5]));
-                cardBuilder.setEvent(getEvent(line[0]));
-                cards.add(cardBuilder.build());
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (SlickException e) {
-            throw new RuntimeException(e);
         }
         return cards;
     }
