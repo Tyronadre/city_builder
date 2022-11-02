@@ -24,6 +24,62 @@ public class CardBuilder {
     private Image back, front;
     private Event event;
 
+    public static List<Card> buildCardsFromCSV(String csv) {
+        List<Card> cards = new ArrayList<>();
+
+        try (var reader = new BufferedReader(new FileReader(ResourceLoader.getResource(csv).getFile()))) {
+            String l;
+            while ((l = reader.readLine()) != null) {
+                try {
+                    var line = l.split(",");
+                    if (line.length != 7) {
+                        System.err.println("Could not parse line, skipping: " + Arrays.toString(line));
+                        continue;
+                    }
+                    var cardBuilder = new CardBuilder();
+                    cardBuilder.setName(line[0]);
+                    cardBuilder.setType(switch (Integer.parseInt(line[1])) {
+                        case 1 -> Type.PRIMARY_INDUSTRY;
+                        case 2 -> Type.SECONDARY_INDUSTRY;
+                        case 3 -> Type.RESTAURANTS;
+                        case 4 -> Type.MAYOR_ESTABLISHMENT;
+                        case 5 -> Type.LANDMARK;
+                        default -> throw new IllegalStateException("Unexpected value: " + line[2]);
+                    });
+                    cardBuilder.setCardClass(switch (line[2]) {
+                        case "feld" -> CardClass.WHEAT;
+                        case "tier" -> CardClass.COW;
+                        case "laden" -> CardClass.SUITCASE;
+                        default -> throw new IllegalStateException("Unexpected value: " + line[2]);
+                    });
+                    cardBuilder.setCost(Integer.parseInt(line[3]));
+                    cardBuilder.setFront(new Image("/assets/cards/" + line[4]));
+                    cardBuilder.setBack(new Image("/assets/cards/" + line[5]));
+                    cardBuilder.setEvent(getEvent(line[0]));
+                    for (int i = 0; i < Integer.parseInt(line[6]); i++) {
+                        cards.add(cardBuilder.build());
+                    }
+                } catch (RuntimeException | SlickException e) {
+                    System.err.println("Failed to load card: " + l);
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cards;
+    }
+
+    private static Event getEvent(String cardName) {
+        return new Event("CardEvent_" + cardName) {
+            @Override
+            protected boolean performAction(GameContainer gc, StateBasedGame sb, int delta) {
+                System.out.println("Card Event " + cardName + " triggered.");
+                return false;
+            }
+        };
+
+    }
 
     public Card build() throws SlickException {
         return new Card(name, cost, cardClass, type, back, front) {
@@ -67,61 +123,5 @@ public class CardBuilder {
     public CardBuilder setEvent(Event event) {
         this.event = event;
         return this;
-    }
-
-
-    public static List<Card> buildCardsFromCSV(String csv) {
-        List<Card> cards = new ArrayList<>();
-
-        try (var reader = new BufferedReader(new FileReader(ResourceLoader.getResource(csv).getFile()))) {
-            String l;
-            while((l = reader.readLine()) != null) {
-                try {
-                    var line = l.split(",");
-                    if (line.length != 6) {
-                        System.err.println("Could not parse line, skipping: " + Arrays.toString(line));
-                        continue;
-                    }
-                    var cardBuilder = new CardBuilder();
-                    cardBuilder.setName(line[0]);
-                    cardBuilder.setType(switch (Integer.parseInt(line[1])) {
-                        case 1 -> Type.PRIMARY_INDUSTRY;
-                        case 2 -> Type.SECONDARY_INDUSTRY;
-                        case 3 -> Type.RESTAURANTS;
-                        case 4 -> Type.MAYOR_ESTABLISHMENT;
-                        case 5 -> Type.LANDMARK;
-                        default -> throw new IllegalStateException("Unexpected value: " + line[2]);
-                    });
-                    cardBuilder.setCardClass(switch (line[2]) {
-                        case "feld" -> CardClass.WHEAT;
-                        case "tier" -> CardClass.COW;
-                        case "laden" -> CardClass.SUITCASE;
-                        default -> throw new IllegalStateException("Unexpected value: " + line[2]);
-                    });
-                    cardBuilder.setCost(Integer.parseInt(line[3]));
-                    cardBuilder.setFront(new Image("/assets/cards/"+line[4]));
-                    cardBuilder.setBack(new Image("/assets/cards/"+line[5]));
-                    cardBuilder.setEvent(getEvent(line[0]));
-                    cards.add(cardBuilder.build());
-                } catch (RuntimeException | SlickException e) {
-                    System.err.println("Failed to load card: " + l);
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return cards;
-    }
-
-    private static Event getEvent(String cardName) {
-        return new Event("CardEvent_" + cardName) {
-            @Override
-            protected boolean performAction(GameContainer gc, StateBasedGame sb, int delta) {
-                System.out.println("Card Event " + cardName + " triggered.");
-                return false;
-            }
-        };
-
     }
 }

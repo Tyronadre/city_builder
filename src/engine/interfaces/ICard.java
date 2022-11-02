@@ -3,6 +3,7 @@ package engine.interfaces;
 import eea.engine.event.Event;
 import engine.cards.CardClass;
 import engine.cards.Type;
+import org.w3c.dom.Entity;
 
 public interface ICard {
 

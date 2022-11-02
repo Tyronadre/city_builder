@@ -29,17 +29,15 @@ public interface ICardStack {
      *
      * @param card The card to be added
      * @param pos  The position of the card in the stack
-     * @return {@code TRUE} if the card was added, {@code FALSE} otherwise
      */
-    boolean addCard(ICard card, int pos);
+    void addCard(ICard card, int pos);
 
     /**
      * Removes the card at the specified position of the stack, or null if the position is not in the stack.
      *
      * @param card the card to be removed
-     * @return the card
      */
-    ICard removeCard(ICard card);
+    void removeCard(ICard card);
 
     /**
      * Shuffles this stack. If the stack is empty nothing happens

@@ -44,7 +44,7 @@ public class MiningOperation extends StateBasedGame {
         AppGameContainer app = new AppGameContainer(new MiningOperation());
 
         app.setShowFPS(false);
-        app.setDisplayMode(Toolkit.getDefaultToolkit().getScreenSize().width,Toolkit.getDefaultToolkit().getScreenSize().height,true);
+        app.setDisplayMode(1920, 1080,false);
         Options.init();
 
         app.start();

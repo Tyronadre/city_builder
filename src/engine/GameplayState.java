@@ -1,10 +1,7 @@
 package engine;
 
 import eea.engine.event.Event;
-import engine.cards.Card;
-import engine.cards.CardBuilder;
-import engine.cards.CardClass;
-import engine.cards.Type;
+import engine.cards.*;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -55,6 +52,8 @@ public class GameplayState extends BasicGameState {
         //GenCards:
         List<Card> cards = CardBuilder.buildCardsFromCSV("/assets/cards.csv");
         System.out.println(cards);
+        CardStack stack = new CardStack("DrawStack");
+        cards.forEach(stack::addCard);
 
 
         // Hintergrund laden
@@ -113,30 +112,35 @@ public class GameplayState extends BasicGameState {
 
         entityManager.addEntity(stateID, mouse_Clicked_Listener);
 
-        int i = 0;
+        /*
+        int i = 1;
         for (Card card : cards) {
+            card.setPaintFront(true);
+            card.setPosition(new Vector2f( 10 + 200 * i++, 300));
+            card.setScale(0.5f);
             StateBasedEntityManager.getInstance().addEntity(stateID, card);
-            card.setPosition(new Vector2f(i++ * 210, 0));
+
             System.out.println(card);
         }
-
+         */
+        entityManager.addEntity(stateID,stack);
     }
 
     /**
-     * Wird vor dem Frame ausgefuehrt
+     * Before the Frame
      */
     @Override
-    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        // StatedBasedEntityManager soll alle Entities aktualisieren
+    public void update(GameContainer container, StateBasedGame game, int delta) {
+        //Update Entities
         entityManager.updateEntities(container, game, delta);
     }
 
     /**
-     * Wird mit dem Frame ausgefuehrt
+     * While Frame, but should only be used for rendering
      */
     @Override
-    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        // StatedBasedEntityManager soll alle Entities rendern
+    public void render(GameContainer container, StateBasedGame game, Graphics g) {
+        // Render Entities
         entityManager.renderEntities(container, game, g);
     }
 
